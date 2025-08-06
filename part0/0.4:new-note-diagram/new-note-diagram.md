@@ -6,16 +6,24 @@
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
 
-    Note right of browser: The browser sends user input to the server address new_note using a POST request
+    Note right of browser: The browser sends user input to the server address /new_note using a POST request
 
-    server-->>browser: HTML document
+    server-->>browser: 302 Redirect
     deactivate server
 
     Note right of browser: The server responds with 302 status code, prompting a new HTTP GET
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+     activate server
+
+    Note right of browser: The browser makes a new GET request to the location specified in the server redirect
+
+    server-->>browser: HTML document
+    deactivate server
+
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/style.css
     activate server
-    server-->>browser: the css file
+    server-->>browser: CSS file
     deactivate server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
