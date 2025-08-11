@@ -18,6 +18,7 @@ const App = () => {
     anecdotes.forEach((_, i) => {
       votesData[i] = 0;
     });
+
     return votesData;
   });
 
@@ -32,12 +33,31 @@ const App = () => {
     setVotes(copy);
   };
 
+  let mostVotes = 0;
+  let mostVotesIndex = 0;
+  for (let i = 0; i < anecdotes.length; i++) {
+    if (votes[i] > mostVotes) {
+      mostVotes = votes[i];
+      mostVotesIndex = i;
+    }
+  }
+
   return (
     <>
+      <h2>Anecdote of the day</h2>
       <div>{anecdotes[selected]}</div>
       <p>has {votes[selected]} votes</p>
       <button onClick={upVote}>vote</button>
       <button onClick={selectAnecdote}>next anecdote</button>
+      <h2>Anecdote with most votes</h2>
+      {mostVotes > 0 ? (
+        <>
+          <div>{anecdotes[mostVotesIndex]}</div>
+          <p>has {mostVotes} votes</p>
+        </>
+      ) : (
+        <p>No votes yet</p>
+      )}
     </>
   );
 };
