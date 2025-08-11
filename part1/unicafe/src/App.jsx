@@ -2,18 +2,21 @@ import { useState } from "react";
 
 const Button = (props) => <button onClick={props.onClick}>{props.text}</button>;
 
-const StatsDisplay = (props) => (
-  <p>
-    {props.text} {props.value}
-  </p>
+const StatisticLine = (props) => (
+  <tr>
+    <td>{props.text}</td>
+    <td>{props.value}</td>
+  </tr>
 );
 
 const Statistics = ({ stats }) => (
-  <div>
-    {stats.map((item, index) => (
-      <StatsDisplay key={index} text={item.text} value={item.value} />
-    ))}
-  </div>
+  <table>
+    <tbody>
+      {stats.map((item, index) => (
+        <StatisticLine key={index} text={item.text} value={item.value} />
+      ))}
+    </tbody>
+  </table>
 );
 
 const App = () => {
@@ -37,7 +40,7 @@ const App = () => {
       value: total > 0 ? (good * 1 + bad * -1) / total : 0,
     },
     {
-      text: "good %",
+      text: "positive",
       value: total > 0 ? (good / total) * 100 + "%" : "0%",
     },
   ];
