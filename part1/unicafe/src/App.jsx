@@ -51,7 +51,7 @@ const App = () => {
       <Button onClick={addBad} text="bad" />
 
       <h2>statistics</h2>
-      <Statistics stats={stats} />
+      {total > 0 ? <Statistics stats={stats} /> : <p>No feedback given</p>}
     </div>
   );
 };
