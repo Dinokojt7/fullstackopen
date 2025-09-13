@@ -1,17 +1,23 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "040-1234567" },
+  ]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
-  function handleInput(event) {
+  function handleNameInput(event) {
     setNewName(event.target.value);
-    console.log(newName);
+  }
+
+  function handleNumberInput(event) {
+    setNewNumber(event.target.value);
   }
 
   function handleSubmit(event) {
     event.preventDefault();
-    const newEntry = { name: newName };
+    const newEntry = { name: newName, number: newNumber };
 
     const exists = persons.some((person) => person.name === newName);
 
@@ -27,7 +33,10 @@ const App = () => {
       <h2>Phonebook</h2>
       <form>
         <div>
-          name: <input value={newName} onChange={handleInput} />
+          name: <input value={newName} onChange={handleNameInput} />
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={handleNumberInput} />
         </div>
         <div>
           <button type="submit" onClick={handleSubmit}>
@@ -37,7 +46,9 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {persons.map((person) => (
-        <p key={person.name}>{person.name}</p>
+        <p key={person.name}>
+          {person.name} {person.number}
+        </p>
       ))}
     </div>
   );
