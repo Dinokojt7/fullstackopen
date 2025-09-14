@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import phoneBookService from "./services/phoneBookService";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,8 +12,8 @@ const App = () => {
   const [showAll, setShowAll] = useState(true);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    phoneBookService.getAll().then((initialNumbers) => {
+      setPersons(initialNumbers);
     });
   }, []);
 
@@ -35,8 +35,8 @@ const App = () => {
     const exists = persons.some((person) => person.name === newName);
 
     if (!exists) {
-      axios.post("http://localhost:3001/persons", newEntry).then((response) => {
-        setPersons(persons.concat(response.data));
+      phoneBookService.create(newEntry).then((returnedNumber) => {
+        setPersons(persons.concat(returnedNumber));
         setNewName("");
         setNewNumber("");
       });
