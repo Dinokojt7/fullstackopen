@@ -41,7 +41,23 @@ const App = () => {
         setNewNumber("");
       });
     } else {
-      alert(`${newName} is already added to phonebook`);
+      const targetPerson = persons.find((p) => p.name === newEntry.name);
+      const id = targetPerson.id;
+
+      if (
+        window.confirm(
+          `${targetPerson.name} is already added to phonebook, replace the old number with a new one?`,
+        )
+      ) {
+        const updatedEntry = { ...targetPerson, number: newNumber };
+        phoneBookService
+          .update(id, updatedEntry)
+          .then((returnedPerson) =>
+            setPersons(persons.map((p) => (p.id === id ? returnedPerson : p))),
+          );
+      } else {
+        console.log(`${targetPerson.name} remains as is!`);
+      }
     }
   }
 
