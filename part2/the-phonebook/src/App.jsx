@@ -45,10 +45,22 @@ const App = () => {
     }
   }
 
+  const handleDelete = (id) => {
+    const targetPerson = persons.find((p) => p.id === id);
+    if (window.confirm(`Delete ${targetPerson.name}?`)) {
+      phoneBookService
+        .remove(id)
+        .then(() => setPersons(persons.filter((n) => n.id !== id)));
+    } else {
+      console.log(`${targetPerson.name} remains in the server!`);
+    }
+  };
+
   function handleSearch(event) {
     setSearchName(event.target.value);
     setShowAll(false);
   }
+
   const personShowing = showAll
     ? persons
     : persons.filter((person) =>
@@ -68,7 +80,7 @@ const App = () => {
         handleNumberInput={handleNumberInput}
       />
       <h3>Numbers</h3>
-      <Persons personShowing={personShowing} />
+      <Persons personShowing={personShowing} handleDelete={handleDelete} />
     </div>
   );
 };
