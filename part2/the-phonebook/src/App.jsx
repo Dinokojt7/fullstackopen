@@ -3,6 +3,7 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import phoneBookService from "./services/phoneBookService";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
   const [showAll, setShowAll] = useState(true);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     phoneBookService.getAll().then((initialNumbers) => {
@@ -35,11 +37,19 @@ const App = () => {
     const exists = persons.some((person) => person.name === newName);
 
     if (!exists) {
-      phoneBookService.create(newEntry).then((returnedNumber) => {
-        setPersons(persons.concat(returnedNumber));
-        setNewName("");
-        setNewNumber("");
-      });
+      phoneBookService
+        .create(newEntry)
+        .then((returnedNumber) => {
+          setPersons(persons.concat(returnedNumber));
+          setNewName("");
+          setNewNumber("");
+        })
+        .then(() => {
+          setSuccessMessage(`Added ${newEntry.name}`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 5000);
+        });
     } else {
       const targetPerson = persons.find((p) => p.name === newEntry.name);
       const id = targetPerson.id;
@@ -52,9 +62,17 @@ const App = () => {
         const updatedEntry = { ...targetPerson, number: newNumber };
         phoneBookService
           .update(id, updatedEntry)
-          .then((returnedPerson) =>
-            setPersons(persons.map((p) => (p.id === id ? returnedPerson : p))),
-          );
+          .then((returnedPerson) => {
+            setPersons(persons.map((p) => (p.id === id ? returnedPerson : p)));
+            setNewName("");
+            setNewNumber("");
+          })
+          .then(() => {
+            setSuccessMessage(`Added ${newEntry.name}`);
+            setTimeout(() => {
+              setSuccessMessage(null);
+            }, 5000);
+          });
       } else {
         console.log(`${targetPerson.name} remains as is!`);
       }
@@ -86,6 +104,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
       <Filter searchName={searchName} handleSearch={handleSearch} />
       <h3>Add a new</h3>
       <PersonForm
