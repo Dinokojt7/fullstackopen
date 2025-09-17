@@ -12,11 +12,10 @@ const App = () => {
       .then((response) => setCountries(response.data));
   }, []);
 
-  // filter whenever input changes
   useEffect(() => {
     if (value) {
       const result = countries.filter((country) =>
-        country.name.common.includes(value),
+        country.name.common.toLowerCase().includes(value),
       );
       setFiltered(result);
     } else {
@@ -24,7 +23,12 @@ const App = () => {
     }
   }, [value, countries]);
 
-  const handleChange = (event) => setValue(event.target.value);
+  const handleChange = (event) => setValue(event.target.value.toLowerCase());
+
+  const handleSelect = (selected) => {
+    const item = filtered.filter((c) => c.name.common === selected);
+    setValue(item[0].name.common.toLowerCase());
+  };
 
   return (
     <div>
@@ -36,7 +40,10 @@ const App = () => {
       {filtered.length <= 10 && filtered.length > 1 && (
         <ul>
           {filtered.map((c) => (
-            <li key={c.cca3}>{c.name.common}</li>
+            <li key={c.cca3}>
+              {c.name.common}
+              <button onClick={() => handleSelect(c.name.common)}>show</button>
+            </li>
           ))}
         </ul>
       )}
@@ -52,8 +59,8 @@ const App = () => {
           <h2>Languages</h2>
           <ul>
             {filtered[0].languages &&
-              Object.values(filtered[0].languages).map((lang, i) => (
-                <li key={i}>{lang}</li>
+              Object.values(filtered[0].languages).map((language, i) => (
+                <li key={i}>{language}</li>
               ))}
           </ul>
           <img src={filtered[0].flags.png} />
