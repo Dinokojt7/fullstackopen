@@ -62,16 +62,33 @@ const generateId = (max) => {
   return randomId.toString();
 };
 
+const nameLookup = (name) => persons.some((person) => person.name === name);
+
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
-  person = {
+  if (!body.name) {
+    return response.status(400).json({
+      error: "name is required",
+    });
+  } else if (!body.number) {
+    return response.status(400).json({
+      error: "number is required",
+    });
+  } else if (nameLookup(body.name)) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
+
+  const person = {
     id: generateId(1000000),
     name: body.name,
     number: body.number,
   };
 
   persons = persons.concat(person);
+
   response.json(person);
 });
 
