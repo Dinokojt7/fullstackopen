@@ -24,6 +24,8 @@ let persons = [
   },
 ];
 
+app.use(express.json());
+
 app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
@@ -53,6 +55,41 @@ app.delete("/api/persons/:id", (request, response) => {
   persons = persons.filter((person) => person.id !== id);
 
   response.status(204).end();
+});
+
+const generateId = (max) => {
+  const randomId = Math.floor(Math.random() * max);
+  return randomId.toString();
+};
+
+const nameLookup = (name) => persons.some((person) => person.name === name);
+
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+
+  if (!body.name) {
+    return response.status(400).json({
+      error: "name is required",
+    });
+  } else if (!body.number) {
+    return response.status(400).json({
+      error: "number is required",
+    });
+  } else if (nameLookup(body.name)) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
+
+  const person = {
+    id: generateId(1000000),
+    name: body.name,
+    number: body.number,
+  };
+
+  persons = persons.concat(person);
+
+  response.json(person);
 });
 
 const PORT = 3001;
