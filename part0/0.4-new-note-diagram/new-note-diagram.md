@@ -41,4 +41,3 @@
     Note right of browser: The browser executes the callback function that renders the notes, which include the note that
     Note right of browser: the user submitted in the initial POST request
 ```
-   
